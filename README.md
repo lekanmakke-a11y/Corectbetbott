@@ -1,30 +1,19 @@
 # CorectBet Bot
 
-A Telegram bot for CorectBet community membership verification.
+Telegram bot for CorectBet community verification.
 
-## Quick Deploy on Railway
+## Deploy on Railway
 
-[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app)
-
-### Environment Variables Needed
-
-| Variable | Example Value |
-|----------|---------------|
-| BOT_TOKEN | 7234567890:ABCdef... |
-| CHANNEL_ID | -1001234567890 |
-| CHANNEL_LINK | https://t.me/+QvCFEopP3r9hY2Q0 |
+1. Fork this repository
+2. Create new project on Railway
+3. Add environment variables:
+   - BOT_TOKEN
+   - CHANNEL_ID
+   - CHANNEL_LINK
+4. Deploy!
 
 ## Local Development
 
-1. Clone repo
-2. Create `.env` file
-3. Install dependencies: `pip install -r requirements.txt`
-4. Run: `python bot.py`
-
-## Bot Commands
-
-- `/start` - Start the bot
-
-## Support
-
-For support, contact @CorectbetBot
+```bash
+pip install -r requirements.txt
+python bot.py
