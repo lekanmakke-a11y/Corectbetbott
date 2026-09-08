@@ -1,11 +1,9 @@
 import os
 import logging
 import sys
-import asyncio
 from dotenv import load_dotenv
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Application, CommandHandler, CallbackQueryHandler, ContextTypes
-from telegram.error import TelegramError, BadRequest, NetworkError, TimedOut
 
 # Load environment variables
 load_dotenv()
@@ -24,18 +22,18 @@ CHANNEL_LINK = os.getenv('CHANNEL_LINK', 'https://t.me/+QvCFEopP3r9hY2Q0')
 
 # Validate required environment variables
 if not BOT_TOKEN:
-    logger.error("BOT_TOKEN not found in environment variables")
+    logger.error("BOT_TOKEN not found")
     sys.exit(1)
 
 if not CHANNEL_ID:
-    logger.error("CHANNEL_ID not found in environment variables")
+    logger.error("CHANNEL_ID not found")
     sys.exit(1)
 
 # Convert CHANNEL_ID to integer
 try:
     CHANNEL_ID_INT = int(CHANNEL_ID)
 except ValueError:
-    logger.error(f"Invalid CHANNEL_ID format: {CHANNEL_ID}")
+    logger.error(f"Invalid CHANNEL_ID: {CHANNEL_ID}")
     sys.exit(1)
 
 # Constants
@@ -102,7 +100,6 @@ async def check_membership(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await query.answer()
         logger.info(f"Checking membership for user {user_id}")
         
-        # Get chat member
         member = await context.bot.get_chat_member(
             chat_id=CHANNEL_ID_INT, 
             user_id=user_id
@@ -124,21 +121,6 @@ async def check_membership(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 parse_mode='Markdown'
             )
             
-    except BadRequest as e:
-        logger.error(f"BadRequest: {e}")
-        error_msg = "❌ **Eroare de verificare.**\n\nTe rugăm să încerci din nou."
-        
-        if "chat not found" in str(e).lower():
-            error_msg = "❌ **Canalul nu a fost găsit.**\n\nContactează suportul."
-        elif "bot is not a member" in str(e).lower():
-            error_msg = "❌ **Botul nu este administrator.**\n\nContactează suportul."
-        
-        await query.edit_message_text(
-            error_msg,
-            reply_markup=get_check_keyboard(),
-            parse_mode='Markdown'
-        )
-        
     except Exception as e:
         logger.error(f"Error checking membership: {e}")
         await query.edit_message_text(
@@ -150,31 +132,19 @@ async def check_membership(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def error_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Handle errors"""
     logger.error(f"Error: {context.error}")
-    try:
-        if update and update.effective_message:
-            await update.effective_message.reply_text(
-                "❌ A apărut o eroare. Te rugăm să încerci din nou."
-            )
-    except:
-        pass
 
 def main():
     """Start the bot"""
     try:
-        # Create application
         application = Application.builder().token(BOT_TOKEN).build()
         
-        # Add handlers
         application.add_handler(CommandHandler("start", start))
         application.add_handler(CallbackQueryHandler(check_membership, pattern='^check$'))
         application.add_error_handler(error_handler)
         
-        # Log startup
         logger.info("Bot starting...")
         logger.info(f"Channel ID: {CHANNEL_ID_INT}")
-        logger.info(f"Channel Link: {CHANNEL_LINK}")
         
-        # Start polling
         application.run_polling(
             allowed_updates=Update.ALL_TYPES,
             drop_pending_updates=True
