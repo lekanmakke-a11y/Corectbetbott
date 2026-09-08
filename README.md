@@ -1,19 +1,19 @@
 # CorectBet Bot
 
-Telegram bot for CorectBet community verification.
-
 ## Deploy on Railway
 
-1. Fork this repository
-2. Create new project on Railway
+1. Fork this repo
+2. Create project on Railway
 3. Add environment variables:
    - BOT_TOKEN
    - CHANNEL_ID
    - CHANNEL_LINK
-4. Deploy!
+4. Deploy
 
-## Local Development
+## Environment Variables
 
-```bash
-pip install -r requirements.txt
-python bot.py
+| Variable | Description |
+|----------|-------------|
+| BOT_TOKEN | Bot token from @BotFather |
+| CHANNEL_ID | Channel ID (negative number) |
+| CHANNEL_LINK | Channel invite link |
