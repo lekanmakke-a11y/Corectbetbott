@@ -1,6 +1,5 @@
 import os
 import logging
-import sys
 from dotenv import load_dotenv
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Application, CommandHandler, CallbackQueryHandler, ContextTypes
@@ -20,23 +19,22 @@ BOT_TOKEN = os.getenv('BOT_TOKEN')
 CHANNEL_ID = os.getenv('CHANNEL_ID')
 CHANNEL_LINK = os.getenv('CHANNEL_LINK', 'https://t.me/+QvCFEopP3r9hY2Q0')
 
-# Validate required environment variables
+# Validate
 if not BOT_TOKEN:
     logger.error("BOT_TOKEN not found")
-    sys.exit(1)
+    exit(1)
 
 if not CHANNEL_ID:
     logger.error("CHANNEL_ID not found")
-    sys.exit(1)
+    exit(1)
 
-# Convert CHANNEL_ID to integer
 try:
     CHANNEL_ID_INT = int(CHANNEL_ID)
 except ValueError:
     logger.error(f"Invalid CHANNEL_ID: {CHANNEL_ID}")
-    sys.exit(1)
+    exit(1)
 
-# Constants
+# Messages
 WELCOME_MESSAGE = """👋 **Bine ai venit în CorectBet!**
 
 De peste **7 ani construim și dezvoltăm această comunitate**, iar unul dintre lucrurile la care am ținut întotdeauna este **calitatea membrilor**, nu doar numărul lor.
@@ -57,7 +55,7 @@ NOT_JOINED_MESSAGE = """❌ **Nu ești încă membru al canalului.**
 
 Te rugăm să intri în canal folosind butonul de mai jos, apoi revino și apasă „AM INTRAT ÎN CANAL”."""
 
-# Keyboard functions
+# Keyboards
 def get_verify_keyboard():
     keyboard = [[InlineKeyboardButton("🔐 VERIFICĂ ȘI INTRĂ ÎN CORECTBET", url=CHANNEL_LINK)]]
     return InlineKeyboardMarkup(keyboard)
@@ -76,12 +74,11 @@ def get_access_confirmed_keyboard():
     ]
     return InlineKeyboardMarkup(keyboard)
 
+# Handlers
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Handle /start command"""
     try:
         user = update.effective_user
         logger.info(f"User {user.id} started the bot")
-        
         await update.message.reply_text(
             WELCOME_MESSAGE,
             reply_markup=get_verify_keyboard(),
@@ -89,10 +86,8 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
     except Exception as e:
         logger.error(f"Error in start: {e}")
-        await update.message.reply_text("❌ Error. Please try again.")
 
 async def check_membership(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Check if user has joined the channel"""
     query = update.callback_query
     user_id = query.from_user.id
     
@@ -130,21 +125,17 @@ async def check_membership(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
 
 async def error_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Handle errors"""
     logger.error(f"Error: {context.error}")
 
+# Main
 def main():
-    """Start the bot"""
     try:
         application = Application.builder().token(BOT_TOKEN).build()
-        
         application.add_handler(CommandHandler("start", start))
         application.add_handler(CallbackQueryHandler(check_membership, pattern='^check$'))
         application.add_error_handler(error_handler)
         
         logger.info("Bot starting...")
-        logger.info(f"Channel ID: {CHANNEL_ID_INT}")
-        
         application.run_polling(
             allowed_updates=Update.ALL_TYPES,
             drop_pending_updates=True
@@ -152,7 +143,7 @@ def main():
         
     except Exception as e:
         logger.error(f"Fatal error: {e}")
-        sys.exit(1)
+        exit(1)
 
 if __name__ == '__main__':
     main()
