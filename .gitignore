@@ -1,26 +1,9 @@
-# Python
+.env
 __pycache__/
 *.pyc
-*.pyo
-*.pyd
-.Python
-env/
 venv/
-ENV/
-env.bak/
-venv.bak/
-
-# Environment variables
-.env
-.env.local
-
-# Logs
+.railway/
 *.log
-
-# IDE
+.DS_Store
 .vscode/
 .idea/
-.DS_Store
-
-# Railway
-.railway/
