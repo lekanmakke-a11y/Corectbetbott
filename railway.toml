@@ -1,0 +1,13 @@
+[build]
+builder = "RAILPACK"
+
+[deploy]
+numReplicas = 1
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 10
+
+[build.buildpacks]
+python = "python"
+
+[build.env]
+PYTHON_VERSION = "3.11"
