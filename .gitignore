@@ -1,11 +1,14 @@
 # Python
 __pycache__/
-*.py[cod]
-*.so
+*.pyc
+*.pyo
+*.pyd
 .Python
 env/
 venv/
 ENV/
+env.bak/
+venv.bak/
 
 # Environment variables
 .env
