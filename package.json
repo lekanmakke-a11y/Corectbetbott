@@ -1,0 +1,9 @@
+{
+  "name": "corectbet-bot",
+  "version": "1.0.0",
+  "description": "CorectBet Telegram Bot",
+  "main": "bot.py",
+  "scripts": {
+    "start": "python bot.py"
+  }
+}
